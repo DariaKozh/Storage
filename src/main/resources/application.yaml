@@ -1,0 +1,41 @@
+server:
+  port: 8080
+  error:
+      whitelabel:
+        enabled: false
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        format_sql: true
+    show-sql: true
+  sql:
+    init:
+      mode: always
+  datasource:
+    url: ${SPRING_DATASOURCE_MAIN:jdbc:postgresql://localhost:5433/Storage}
+    username: ${POSTGRES_USER:user}
+    password: ${POSTGRES_PASSWORD:pass}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: false
+    baseline-on-migrate: true
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+      springframework:
+        orm:
+          jpa: INFO
+        transaction: INFO
+    org.springframework:
+      transaction:
+        interceptor: TRACE
+      orm:
+        jpa:
+          JpaTransactionManager: DEBUG
+
