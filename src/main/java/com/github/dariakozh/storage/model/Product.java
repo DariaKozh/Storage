@@ -1,5 +1,6 @@
 package com.github.dariakozh.storage.model;
 
+import com.github.dariakozh.storage.dto.ProductDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -42,4 +43,19 @@ public class Product {
     @Column(nullable = false)
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate creationDate;
+
+    public static Product of(ProductDto productDto, Category category) {
+        Product product = new Product();
+        product.setId(UUID.randomUUID());
+        product.setItem(productDto.item());
+        product.setTitle(productDto.title());
+        product.setDescription(productDto.description());
+        product.setCategory(category);
+        product.setPrice(productDto.price());
+        product.setQuantity(productDto.quantity());
+        product.setLastModifiedDate(LocalDateTime.now());
+        product.setCreationDate(LocalDate.now());
+
+        return product;
+    }
 }
