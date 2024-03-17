@@ -2,12 +2,17 @@ package com.github.dariakozh.storage.service;
 
 import com.github.dariakozh.storage.dto.ProductDto;
 import com.github.dariakozh.storage.model.Product;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
 /**
  * Интерфейс ProductService представляет сервис для работы с товарами.
  */
+@Validated
 public interface ProductService {
     /**
      * Метод создания товара.
@@ -15,7 +20,7 @@ public interface ProductService {
      * @param productDto - входные данные товара
      * @return Product
      */
-    Product createProduct(ProductDto productDto);
+    Product createProduct(@Valid ProductDto productDto);
 
     /**
      * Метод получения всех товаров.
@@ -30,7 +35,7 @@ public interface ProductService {
      * @param categoryTitle - наименование категории
      * @return List<Product>
      */
-    List<Product> getAllProductsByCategoryTitle(String categoryTitle);
+    List<Product> getAllProductsByCategoryTitle(@NotBlank String categoryTitle);
 
     /**
      * Метод получения товара по артикулу.
@@ -38,7 +43,7 @@ public interface ProductService {
      * @param item - артикул товара
      * @return Product
      */
-    Product getProductsByItem(String item);
+    Product getProductsByItem(@Size(min = 2, max = 10) String item);
 
     /**
      * Метод удаления товара по артикулу.
@@ -46,7 +51,7 @@ public interface ProductService {
      * @param item - артикул товара
      * @return Product
      */
-    Product deleteProductByItem(String item);
+    Product deleteProductByItem(@Size(min = 2, max = 10) String item);
 
     /**
      * Метод изменения параметров товара по артикулу.
@@ -54,5 +59,5 @@ public interface ProductService {
      * @param newProduct - обновленный товар
      * @return Product
      */
-    Product updateProduct(Product newProduct);
+    Product updateProduct(@Valid Product newProduct);
 }

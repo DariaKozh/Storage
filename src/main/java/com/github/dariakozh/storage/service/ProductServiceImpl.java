@@ -5,9 +5,13 @@ import com.github.dariakozh.storage.exception.NotFoundException;
 import com.github.dariakozh.storage.model.Category;
 import com.github.dariakozh.storage.model.Product;
 import com.github.dariakozh.storage.repository.ProductRepository;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +21,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
+@Validated
 public class ProductServiceImpl implements ProductService {
 
     private final CategoryService categoryService;
@@ -29,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
      * @return Product
      */
     @Override
-    public Product createProduct(ProductDto productDto) {
+    public Product createProduct(@Valid ProductDto productDto) {
         Category category = categoryService.getCategoryByTitle(productDto.categoryTitle());
         return productRepository.save(Product.of(productDto, category));
     }
@@ -51,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
      * @return List<Product>
      */
     @Override
-    public List<Product> getAllProductsByCategoryTitle(String categoryTitle) {
+    public List<Product> getAllProductsByCategoryTitle(@NotBlank String categoryTitle) {
         return productRepository.findAllProductsByCategoryTitle(categoryTitle).orElseThrow(() -> new NotFoundException("Товары не найдены"));
     }
 
@@ -62,7 +67,7 @@ public class ProductServiceImpl implements ProductService {
      * @return Product
      */
     @Override
-    public Product getProductsByItem(String item) {
+    public Product getProductsByItem(@Size(min = 2, max = 10) String item) {
         return productRepository.findByItem(item).orElseThrow(() -> new NotFoundException("Товар с item = " + item + " не найден"));
     }
 
@@ -74,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Transactional
     @Override
-    public Product deleteProductByItem(String item) {
+    public Product deleteProductByItem(@Size(min = 2, max = 10) String item) {
         Product product = productRepository.findByItem(item).orElseThrow(() ->
                 new NotFoundException("Товар с item = " + item + " не найдена"));
         productRepository.deleteAllByItem(item);
@@ -89,7 +94,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Transactional
     @Override
-    public Product updateProduct(Product newProduct) {
+    public Product updateProduct(@Valid Product newProduct) {
         Product product = productRepository.findByItem(newProduct.getItem()).orElseThrow(() ->
                 new NotFoundException("Товар с item = " + newProduct.getItem() + " не найдена"));
         product.setTitle(newProduct.getTitle());

@@ -2,12 +2,16 @@ package com.github.dariakozh.storage.service;
 
 import com.github.dariakozh.storage.dto.CategoryDto;
 import com.github.dariakozh.storage.model.Category;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
 /**
  * Интерфейс CategoryService представляет сервис для работы с категориями товаров.
  */
+@Validated
 public interface CategoryService {
     /**
      * Метод создания категории.
@@ -15,7 +19,7 @@ public interface CategoryService {
      * @param categoryDto - входные данные категории товара
      * @return Category
      */
-    Category createCategory(CategoryDto categoryDto);
+    Category createCategory(@Valid CategoryDto categoryDto);
 
     /**
      * Метод получения категории по наименованию.
@@ -23,7 +27,7 @@ public interface CategoryService {
      * @param title - наименование категории
      * @return Category
      */
-    Category getCategoryByTitle(String title);
+    Category getCategoryByTitle(@NotBlank String title);
 
     /**
      * Метод получения всех категорий.
@@ -38,7 +42,7 @@ public interface CategoryService {
      * @param title - наименование категории
      * @return Category
      */
-    Category deleteCategoryByTitle(String title);
+    Category deleteCategoryByTitle(@NotBlank String title);
 
     /**
      * Метод изменения категории.
@@ -46,5 +50,5 @@ public interface CategoryService {
      * @param newCategory - обновленная категория товара
      * @return Category
      */
-    Category updateCategory(Category newCategory);
+    Category updateCategory(@Valid Category newCategory);
 }

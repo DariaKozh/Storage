@@ -5,8 +5,11 @@ import com.github.dariakozh.storage.exception.NotFoundException;
 import com.github.dariakozh.storage.model.Category;
 import com.github.dariakozh.storage.repository.CategoryRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
@@ -15,6 +18,7 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
+@Validated
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
@@ -25,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
      * @return Category
      */
     @Override
-    public Category createCategory(CategoryDto categoryDto) {
+    public Category createCategory(@Valid CategoryDto categoryDto) {
         return categoryRepository.save(Category.of(categoryDto));
     }
 
@@ -36,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
      * @return Category
      */
     @Override
-    public Category getCategoryByTitle(String title) {
+    public Category getCategoryByTitle(@NotBlank String title) {
         return categoryRepository.findByTitle(title).orElseThrow(() -> new NotFoundException("Категория с title = " + title + " не найдена"));
     }
 
@@ -58,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Transactional
     @Override
-    public Category deleteCategoryByTitle(String title) {
+    public Category deleteCategoryByTitle(@NotBlank String title) {
         Category category = categoryRepository.findByTitle(title).orElseThrow(() ->
                 new NotFoundException("Категория с title = " + title + " не найдена"));
         categoryRepository.deleteAllByTitle(title);
@@ -73,7 +77,7 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Transactional
     @Override
-    public Category updateCategory(Category newCategory) {
+    public Category updateCategory(@Valid Category newCategory) {
         Category category = categoryRepository.findById(newCategory.getId()).orElseThrow(() ->
                 new NotFoundException("Категория не найдена"));
         category.setTitle(newCategory.getTitle());

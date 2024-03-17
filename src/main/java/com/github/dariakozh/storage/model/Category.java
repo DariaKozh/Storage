@@ -1,7 +1,9 @@
 package com.github.dariakozh.storage.model;
 
 import com.github.dariakozh.storage.dto.CategoryDto;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import java.util.UUID;
 
@@ -12,14 +14,19 @@ import java.util.UUID;
 @Entity
 @Table(name = "categories")
 @Data
+@Schema(description = "Сущность категория товара")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
+    @NotBlank
+    @NotBlank
+    @Schema(description = "Наименование категории товара")
     @Column(nullable = false, unique = true)
     private String title;
 
+    @NotBlank
+    @Schema(description = "Описание категория товара")
     @Column(nullable = false)
     private String description;
 

@@ -3,6 +3,9 @@ package com.github.dariakozh.storage.controller;
 import com.github.dariakozh.storage.dto.ProductDto;
 import com.github.dariakozh.storage.model.Product;
 import com.github.dariakozh.storage.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,7 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/product")
 @RequiredArgsConstructor
+@Tag(name="Контроллер товара", description="Управляет товарами")
 public class ProductController {
     private final ProductService productService;
 
@@ -26,6 +30,10 @@ public class ProductController {
      * @return Product
      */
     @PostMapping("/create")
+    @Operation(
+            summary = "Создание товара",
+            description = "Позволяет создать новый товар"
+    )
     public Product createProduct(@RequestBody ProductDto productDto) {
         log.debug("[createProduct] productInput={}", productDto);
         return productService.createProduct(productDto);
@@ -37,6 +45,10 @@ public class ProductController {
      * @return List<Product>
      */
     @GetMapping("/all")
+    @Operation(
+            summary = "Получение товаров",
+            description = "Позволяет получить все товары"
+    )
     public List<Product> getAllProducts() {
         log.debug("[getAllProducts]");
         return productService.getAllProducts();
@@ -49,7 +61,12 @@ public class ProductController {
      * @return List<Product>
      */
     @GetMapping
-    public List<Product> getAllProductsByCategoryTitle(@RequestParam(name = "category")String categoryTitle) {
+    @Operation(
+            summary = "Получение товаров",
+            description = "Позволяет получить товары по наименованию категории товара"
+    )
+    public List<Product> getAllProductsByCategoryTitle(@RequestParam(name = "category") @Parameter(description = "Наименование категории")
+                                                           String categoryTitle) {
         log.debug("[getAllProductsByCategoryTitle] categoryTitle={}", categoryTitle);
         return productService.getAllProductsByCategoryTitle(categoryTitle);
     }
@@ -61,7 +78,11 @@ public class ProductController {
      * @return Product
      */
     @GetMapping("/find")
-    public Product getProductsByItem(@RequestParam(name = "item")String item) {
+    @Operation(
+            summary = "Получение товаров",
+            description = "Позволяет получить товары по артикулу"
+    )
+    public Product getProductsByItem(@RequestParam(name = "item") @Parameter(description = "Артикул товара") String item) {
         log.debug("[getProductsByItem] item={}", item);
         return productService.getProductsByItem(item);
     }
@@ -73,7 +94,11 @@ public class ProductController {
      * @return Product
      */
     @DeleteMapping("/delete")
-    public Product deleteProductByItem(@RequestParam(name = "item") String item) {
+    @Operation(
+            summary = "Удаление товаров",
+            description = "Позволяет удалить товары по артикулу"
+    )
+    public Product deleteProductByItem(@RequestParam(name = "item") @Parameter(description = "Артикул товара") String item) {
         log.debug("[ deleteProductByItem] item={}", item);
         return productService.deleteProductByItem(item);
     }
@@ -85,6 +110,10 @@ public class ProductController {
      * @return Product
      */
     @PutMapping("/update")
+    @Operation(
+            summary = "Изменение товаров",
+            description = "Позволяет изменить товар"
+    )
     public Product updateProduct(@RequestBody Product newProduct) {
         log.debug("[updateProduct]newProduct ={}", newProduct);
         return productService.updateProduct(newProduct);
