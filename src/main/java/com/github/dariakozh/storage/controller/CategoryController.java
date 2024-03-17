@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Контроллер для управления категориями товаров.
+ */
 @RestController
 @Slf4j
 @RequestMapping("/category")
@@ -17,9 +20,9 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     /**
-     * Метод оздания категории.
+     * Метод создания категории.
      *
-     * @param categoryDto
+     * @param categoryDto - входные данные категории товара
      * @return Category
      */
     @PostMapping("/create")
@@ -29,9 +32,9 @@ public class CategoryController {
     }
 
     /**
-     * Метод получения категории по названию.
+     * Метод получения категории по наименованию.
      *
-     * @param title
+     * @param title - наименование категории
      * @return Category
      */
     @GetMapping("/getCategory")
@@ -52,9 +55,9 @@ public class CategoryController {
     }
 
     /**
-     * Метод удаления категории по названию.
+     * Метод удаления категории по наименованию.
      *
-     * @param title
+     * @param title - наименование категории
      * @return Category
      */
     @DeleteMapping("/delete")
@@ -64,9 +67,9 @@ public class CategoryController {
     }
 
     /**
-     * Метод изменения категории по названию.
+     * Метод изменения категории.
      *
-     * @param newCategory
+     * @param newCategory - обновленная категория товара
      * @return Category
      */
     @PutMapping("/update")

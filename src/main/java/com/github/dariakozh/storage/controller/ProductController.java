@@ -7,6 +7,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+/**
+ * Контроллер для управления товарами.
+ */
 @RestController
 @Slf4j
 @RequestMapping("/product")
@@ -15,9 +20,9 @@ public class ProductController {
     private final ProductService productService;
 
     /**
-     * Метод оздания товара.
+     * Метод создания товара.
      *
-     * @param productDto
+     * @param productDto - входные данные товара
      * @return Product
      */
     @PostMapping("/create")
@@ -26,50 +31,62 @@ public class ProductController {
         return productService.createProduct(productDto);
     }
 
-//    /**
-//     * Метод получения категории по названию.
-//     *
-//     * @param title
-//     * @return Category
-//     */
-//    @GetMapping("/getCategory")
-//    public Category getCategoryByTitle(@RequestParam(name = "title") String title) {
-//        log.debug("[getCategoryByTitle] categoryTitle={}", title);
-//        return categoryService.getCategoryByTitle(title);
-//    }
-//
-//    /**
-//     * Метод получения всех категорий.
-//     *
-//     * @return List<Category>
-//     */
-//    @GetMapping("/all")
-//    public List<Category> getAllCategories() {
-//        log.debug("[getAllCategories]");
-//        return categoryService.getAllCategories();
-//    }
-//
-//    /**
-//     * Метод удаления категории по названию.
-//     *
-//     * @param title
-//     * @return Category
-//     */
-//    @DeleteMapping("/delete")
-//    public Category deleteCategoryByTitle(@RequestParam(name = "title") String title) {
-//        log.debug("[deleteCategoryByTitle] categoryTitle={}", title);
-//        return categoryService.deleteCategoryByTitle(title);
-//    }
-//
-//    /**
-//     * Метод изменения категории по названию.
-//     *
-//     * @param newCategory
-//     * @return Category
-//     */
-//    @PutMapping("/update")
-//    public Category updateCategory(@RequestBody Category newCategory) {
-//        log.debug("[updateCategory]newCategory={}", newCategory);
-//        return categoryService.updateCategory(newCategory);
-//    }
+    /**
+     * Метод получения всех товаров.
+     *
+     * @return List<Product>
+     */
+    @GetMapping("/all")
+    public List<Product> getAllProducts() {
+        log.debug("[getAllProducts]");
+        return productService.getAllProducts();
+    }
+
+    /**
+     * Метод получения всех товаров по категории.
+     *
+     * @param categoryTitle - наименование категории
+     * @return List<Product>
+     */
+    @GetMapping
+    public List<Product> getAllProductsByCategoryTitle(@RequestParam(name = "category")String categoryTitle) {
+        log.debug("[getAllProductsByCategoryTitle] categoryTitle={}", categoryTitle);
+        return productService.getAllProductsByCategoryTitle(categoryTitle);
+    }
+
+    /**
+     * Метод получения товара по артикулу.
+     *
+     * @param item - артикул товара
+     * @return Product
+     */
+    @GetMapping("/find")
+    public Product getProductsByItem(@RequestParam(name = "item")String item) {
+        log.debug("[getProductsByItem] item={}", item);
+        return productService.getProductsByItem(item);
+    }
+
+    /**
+     * Метод удаления товара по артикулу.
+     *
+     * @param item - артикул товара
+     * @return Product
+     */
+    @DeleteMapping("/delete")
+    public Product deleteProductByItem(@RequestParam(name = "item") String item) {
+        log.debug("[ deleteProductByItem] item={}", item);
+        return productService.deleteProductByItem(item);
+    }
+
+    /**
+     * Метод изменения параметров товара по артикулу.
+     *
+     * @param newProduct - обновленный товар
+     * @return Product
+     */
+    @PutMapping("/update")
+    public Product updateProduct(@RequestBody Product newProduct) {
+        log.debug("[updateProduct]newProduct ={}", newProduct);
+        return productService.updateProduct(newProduct);
+    }
 }

@@ -9,6 +9,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Класс представляет объектное представление класса товара в базе данных.
+ * Аннотация @Entity используется для указания того, что данный класс является сущностью.
+ */
 @Entity
 @Table(name = "products")
 @Data

@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.util.UUID;
 
+/**
+ * Класс представляет объектное представление класса категория товара в базе данных.
+ * Аннотация @Entity используется для указания того, что данный класс является сущностью.
+ */
 @Entity
 @Table(name = "categories")
 @Data
@@ -13,7 +17,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String title;
 
     @Column(nullable = false)
