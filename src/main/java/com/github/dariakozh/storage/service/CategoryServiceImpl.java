@@ -4,6 +4,7 @@ import com.github.dariakozh.storage.dto.CategoryDto;
 import com.github.dariakozh.storage.exception.NotFoundException;
 import com.github.dariakozh.storage.model.Category;
 import com.github.dariakozh.storage.repository.CategoryRepository;
+import com.github.dariakozh.storage.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -21,6 +22,7 @@ import java.util.List;
 @Validated
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     /**
      * Метод создания категории.
@@ -41,7 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public Category getCategoryByTitle(@NotBlank String title) {
-        return categoryRepository.findByTitle(title).orElseThrow(() -> new NotFoundException("Категория с title = " + title + " не найдена"));
+        return categoryRepository.findByTitle(title).orElseThrow(() -> new NotFoundException("Категория с наименованием " + title + " не найдена"));
     }
 
     /**
@@ -51,7 +53,10 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public List<Category> getAllCategories() {
-        return categoryRepository.findAllCategories().orElseThrow(() -> new NotFoundException("Категории не найдены"));
+        List<Category> categories = categoryRepository.findAllCategories().orElseThrow(() -> new NotFoundException("Категории не найдены"));
+        if (categories.isEmpty())
+            throw new NotFoundException("Категории не найдены");
+        return categories;
     }
 
     /**
@@ -64,7 +69,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category deleteCategoryByTitle(@NotBlank String title) {
         Category category = categoryRepository.findByTitle(title).orElseThrow(() ->
-                new NotFoundException("Категория с title = " + title + " не найдена"));
+                new NotFoundException("Категория с наименованием " + title + " не найдена"));
+        if(!productRepository.findAllProductsByCategoryTitle(title).get().isEmpty()) {
+            throw new IllegalArgumentException("В категории с наименованием " + title + " есть товары");
+        }
         categoryRepository.deleteAllByTitle(title);
         return category;
     }

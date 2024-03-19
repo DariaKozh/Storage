@@ -4,6 +4,8 @@ server:
       whitelabel:
         enabled: false
 spring:
+  mvc:
+    throw-exception-if-no-handler-found:true
   jpa:
     hibernate:
       ddl-auto: validate
@@ -21,7 +23,7 @@ spring:
     password: ${POSTGRES_PASSWORD:pass}
     driver-class-name: org.postgresql.Driver
   flyway:
-    enabled: false
+    enabled: true
     baseline-on-migrate: true
 logging:
   level:

@@ -46,7 +46,10 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<Product> getAllProducts() {
-        return productRepository.findAllProducts().orElseThrow(() -> new NotFoundException("Товары не найдены"));
+        List<Product> products = productRepository.findAllProducts().orElseThrow(() -> new NotFoundException("Товары не найдены"));
+        if (products.isEmpty())
+            throw new NotFoundException("Товары не найдены");
+        return products;
     }
 
     /**
@@ -57,7 +60,10 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<Product> getAllProductsByCategoryTitle(@NotBlank String categoryTitle) {
-        return productRepository.findAllProductsByCategoryTitle(categoryTitle).orElseThrow(() -> new NotFoundException("Товары не найдены"));
+        List<Product> products= productRepository.findAllProductsByCategoryTitle(categoryTitle).orElseThrow(() -> new NotFoundException("Товары не найдены"));
+        if (products.isEmpty())
+            throw new NotFoundException("Товары не найдены");
+        return products;
     }
 
     /**
@@ -68,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product getProductsByItem(@Size(min = 2, max = 10) String item) {
-        return productRepository.findByItem(item).orElseThrow(() -> new NotFoundException("Товар с item = " + item + " не найден"));
+        return productRepository.findByItem(item).orElseThrow(() -> new NotFoundException("Товар с артикулом " + item + " не найден"));
     }
 
     /**
@@ -81,7 +87,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product deleteProductByItem(@Size(min = 2, max = 10) String item) {
         Product product = productRepository.findByItem(item).orElseThrow(() ->
-                new NotFoundException("Товар с item = " + item + " не найдена"));
+                new NotFoundException("Товар с артикулом " + item + " не найден"));
         productRepository.deleteAllByItem(item);
         return product;
     }
@@ -95,8 +101,11 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public Product updateProduct(@Valid Product newProduct) {
+        if (!categoryService.getAllCategories().contains(newProduct.getCategory()))
+            throw new NotFoundException("Категория с наименованием " + newProduct.getCategory().getTitle() + " не найдена");
+
         Product product = productRepository.findByItem(newProduct.getItem()).orElseThrow(() ->
-                new NotFoundException("Товар с item = " + newProduct.getItem() + " не найдена"));
+                new NotFoundException("Товар с артикулом = " + newProduct.getItem() + " не найден"));
         product.setTitle(newProduct.getTitle());
         product.setDescription(newProduct.getDescription());
         product.setCategory(newProduct.getCategory());

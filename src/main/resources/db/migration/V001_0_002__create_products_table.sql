@@ -1,13 +1,4 @@
-drop table if exists categories cascade;
 drop table if exists products cascade;
-
-CREATE TABLE categories
-(
-    id          uuid    not null,
-    title       varchar not null unique,
-    description varchar not null,
-    constraint categories_pk primary key (id)
-);
 
 create table products
 (
