@@ -18,7 +18,7 @@ spring:
     init:
       mode: always
   datasource:
-    url: ${SPRING_DATASOURCE_MAIN:jdbc:postgresql://localhost:5432/storage_db}
+    url: ${SPRING_DATASOURCE_DB:jdbc:postgresql://localhost:5432/storage_db}
     username: ${POSTGRES_USER:user}
     password: ${POSTGRES_PASSWORD:pass}
     driver-class-name: org.postgresql.Driver
