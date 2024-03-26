@@ -56,8 +56,8 @@ public interface ProductService {
     /**
      * Метод изменения параметров товара по артикулу.
      *
-     * @param newProduct - обновленный товар
+     * @param productDto - обновленный товар
      * @return Product
      */
-    Product updateProduct(@Valid Product newProduct);
+    Product updateProduct(@Valid ProductDto productDto);
 }

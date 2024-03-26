@@ -15,5 +15,12 @@
 - запустить приложение локально
 - запустить коллекцию Postman для проверки
 
+### Swagger
+http://localhost:8080/swagger-ui/index.html#/
+
+### Коллекция Postman
+Склад товаров.postman_collection.json
+Лежит в проекте
+
 
 

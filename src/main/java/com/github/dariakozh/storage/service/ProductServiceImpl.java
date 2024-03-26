@@ -4,6 +4,7 @@ import com.github.dariakozh.storage.dto.ProductDto;
 import com.github.dariakozh.storage.exception.NotFoundException;
 import com.github.dariakozh.storage.model.Category;
 import com.github.dariakozh.storage.model.Product;
+import com.github.dariakozh.storage.repository.CategoryRepository;
 import com.github.dariakozh.storage.repository.ProductRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -15,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Сервис для работы с товарами.
@@ -24,7 +26,7 @@ import java.util.List;
 @Validated
 public class ProductServiceImpl implements ProductService {
 
-    private final CategoryService categoryService;
+    private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
 
     /**
@@ -35,7 +37,8 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product createProduct(@Valid ProductDto productDto) {
-        Category category = categoryService.getCategoryByTitle(productDto.categoryTitle());
+        Category category = categoryRepository.findByTitle(productDto.categoryTitle())
+                .orElseThrow(() -> new NotFoundException("Категория с наименованием " + productDto.categoryTitle() + " не найдена"));
         return productRepository.save(Product.of(productDto, category));
     }
 
@@ -95,23 +98,29 @@ public class ProductServiceImpl implements ProductService {
     /**
      * Метод изменения параметров товара по артикулу.
      *
-     * @param newProduct - обновленный товар
+     * @param productDto - обновленный товар
      * @return Product
      */
     @Transactional
     @Override
-    public Product updateProduct(@Valid Product newProduct) {
-        if (!categoryService.getAllCategories().contains(newProduct.getCategory()))
-            throw new NotFoundException("Категория с наименованием " + newProduct.getCategory().getTitle() + " не найдена");
+    public Product updateProduct(@Valid ProductDto productDto) {
+        Optional<List<Category>> categories = categoryRepository.findAllCategories();
+        if (categories.isPresent()) {
+            if (!categories.get().stream().map(Category::getTitle).toList().contains(productDto.categoryTitle())) {
+                throw new NotFoundException("Категория с наименованием " + productDto.categoryTitle() + " не найдена");
+            }
+        } else {
+            throw new NotFoundException("Категории не найдены");
+        }
 
-        Product product = productRepository.findByItem(newProduct.getItem()).orElseThrow(() ->
-                new NotFoundException("Товар с артикулом = " + newProduct.getItem() + " не найден"));
-        product.setTitle(newProduct.getTitle());
-        product.setDescription(newProduct.getDescription());
-        product.setCategory(newProduct.getCategory());
-        product.setPrice(newProduct.getPrice());
-        if (!product.getQuantity().equals(newProduct.getQuantity())){
-            product.setQuantity(newProduct.getQuantity());
+        Product product = productRepository.findByItem(productDto.item()).orElseThrow(() ->
+                new NotFoundException("Товар с артикулом = " + productDto.item() + " не найден"));
+        product.setTitle(productDto.title());
+        product.setDescription(productDto.description());
+        product.setCategory(categoryRepository.findByTitle(productDto.categoryTitle()).get());
+        product.setPrice(productDto.price());
+        if (!product.getQuantity().equals(productDto.quantity())){
+            product.setQuantity(productDto.quantity());
             product.setLastModifiedDate(LocalDateTime.now());
         }
 

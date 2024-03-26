@@ -106,7 +106,7 @@ public class ProductController {
     /**
      * Метод изменения параметров товара по артикулу.
      *
-     * @param newProduct - обновленный товар
+     * @param productDto - обновленный товар
      * @return Product
      */
     @PutMapping("/update")
@@ -114,8 +114,8 @@ public class ProductController {
             summary = "Изменение товаров",
             description = "Позволяет изменить товар"
     )
-    public Product updateProduct(@RequestBody Product newProduct) {
-        log.debug("[updateProduct]newProduct ={}", newProduct);
-        return productService.updateProduct(newProduct);
+    public Product updateProduct(@RequestBody ProductDto productDto) {
+        log.debug("[updateProduct]productDto ={}", productDto);
+        return productService.updateProduct(productDto);
     }
 }

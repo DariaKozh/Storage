@@ -4,7 +4,10 @@ import com.github.dariakozh.storage.dto.CategoryDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.UUID;
 
 /**
@@ -14,6 +17,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "categories")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "Сущность категория товара")
 public class Category {
     @Id
